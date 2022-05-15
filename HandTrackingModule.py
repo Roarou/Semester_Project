@@ -2,6 +2,9 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import pandas as pd
+import datetime
+import DATA
+from VIDEO import utilsVideo
 class handTracker():
     def __init__(self, mode=False, maxHands=2, detectionCon=0.5,modelComplexity=1,trackCon=0.5):
         self.mode = mode
@@ -16,7 +19,7 @@ class handTracker():
         self.j = 0
         self.nb_landmarks = (0, 4, 8, 12, 16, 20)
 #Drawing landmarks
-    def handsFinder(self, image, draw=True,output_R = np.zeros((3, 6)),output_L = np.zeros((3, 6))):
+    def handsFinder(self, image, draw=True, output_R = np.zeros((3, 6)),output_L = np.zeros((3, 6))):
         # Landmark initialization
         landmarks_x_R = []
         landmarks_y_R = []
@@ -29,6 +32,7 @@ class handTracker():
         mhl = self.results.multi_hand_landmarks
         mhd = self.results.multi_handedness
         ldm = self.nb_landmarks
+        h, w, c = image.shape
         # Printing positions
 
         if mhl:
@@ -108,12 +112,17 @@ class handTracker():
                 output_L[0, :] = landmarks_x_L
                 output_L[1, :] = landmarks_y_L
                 output_L[2, :] = landmarks_z_L
-            # print(output)
+            #Approach 1: Vector Norm sqrt(x^2+y^2)
 
+            norm_R = np.sqrt(output_R[0, :]**2 + output_R[1, :]**2)
+            norm_L = np.sqrt(output_L[0, :]**2 + output_L[1, :]**2)
+            #print(norm_R.shape)
+            #print("test")
+            #Drawing hands
             for handLms in mhl:
                 if draw:
                     self.mpDraw.draw_landmarks(image, handLms, self.mpHands.HAND_CONNECTIONS)
-        return image, output_R*image.shape.w, output_L*image.shape.w
+        return image, output_R*w, output_L*w
 
     #Finding hands and positions
 
@@ -122,7 +131,9 @@ class handTracker():
         if self.results.multi_hand_landmarks:
             Hand = self.results.multi_hand_landmarks[handNo]
             for id, lm in enumerate(Hand.landmark):
+                #Image shape + channels
                 h, w, c = image.shape
+                #Coordinates in Image Frame
                 cx, cy = int(lm.x*w), int(lm.y*h)
                 # Creates a list with all the landmarks in the image frame
                 lmlist.append([id, cx, cy])
@@ -146,27 +157,32 @@ def main():
     
     outrR = []
     outlL = []
-
+    out_LR = []
+    currenttime = []
+    currentframe = 0
+    uv = utilsVideo(cap)
+    # count the number of frames
+    # calculate duration of the video
+    (fps, frame_count, durationSec) = uv.getStats()
+    print("Total time: {} sec FrameRate: {} FrameCount: {}".format(durationSec, fps, frame_count))
     while True:
+        #Get the current time
+        currentframe += 1
+        currenttime.append(currentframe/fps)
+        #Getting the video and the success
         success, image = cap.read()
+        #Getting the current frame and the hands' data
         image,  outR, outL = tracker.handsFinder(image)
-        lmList,j = tracker.positionFinder(image)
-        if len(lmList) != 0:
-            #Prints the position and ID of a certain landmark , in this case the thumb tip
-            print(lmList[4])
-        outrR.append(outR[0,:])
-        outlL.append(outL[0,:])
+        #Saving everything into a csv file
+        DATA.main(outR, outL, outrR, outlL, out_LR, currenttime)
+        #Show progress bar
+        image = uv.displayProgressBar(image)
+        #Write a new video
         writer.write(image)
-        oL = pd.DataFrame(data=outlL, columns=['Wrist', 'Thumb', 'Index', 'Middle', 'Ring', 'Pinky'])
-        oR = pd.DataFrame(data=outrR, columns=['Wrist', 'Thumb', 'Index', 'Middle', 'Ring', 'Pinky'])
-
-        oL.to_csv('ol.txt', index=False)
-        oR.to_csv('oR.txt', index=False)
-        cv2.imshow("Video", image)
+        #Show the video
+        cv2.imshow("frame", image)
         cv2.waitKey(1)
-        #print(j)
 
-    #print(int(j/61))
     cap.release()
     writer.release()
     cv2.destroyAllWindows()
