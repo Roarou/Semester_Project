@@ -1,19 +1,18 @@
-import os
 import pandas as pd
-import glob
+import numpy as np
+import matplotlib.pyplot as plt
 
+df = pd.read_csv('Exp1PrimingApplyTip.mp4_oL.txt', sep='\t')
 
-def main():
-    path = os.getcwd() + '/Exp1Normal04_distance.txt'
-    df = pd.read_csv(path, sep='\t')
-    path2 = os.getcwd() + '/oR.txt'
-    df2 = pd.read_csv(path2, sep='\t')
-    print(df.shape)
-    print(df2.shape)
-    fps = 25
-    t1 = 4.2
-    t2 = 11.84 - t1
-    t3 = 14.92 - t2
-    t4 =
-if __name__ == "__main__":
-    main()
+print(df['Thumb_L'].skew())
+
+print(df['Thumb_L'].describe())
+print(df['Thumb_L'].quantile(0.10))
+print(df['Thumb_L'].quantile(0.90))
+q_5 = df['Thumb_L'].quantile(0.50)
+q_95 = df['Thumb_L'].quantile(0.10)
+df['Thumb_L'] = np.where(df['Thumb_L'] < q_95, q_5, df['Thumb_L'])
+print(df['Thumb_L'].skew())
+print(df['Thumb_L'].describe())
+
+df.to_csv('Exp1PrimingApplyTip.mp4_oL.txt', index=False, sep='\t')

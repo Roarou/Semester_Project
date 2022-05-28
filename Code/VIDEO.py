@@ -35,9 +35,9 @@ class utilsVideo:
         complete = nextFrameNo / totalFrames
 
         # progress bar thickness
-        lineThickness = 12
+        lineThickness = 25
         # progress bar will be displayed 4% from the bottom of the frame
-        y = math.ceil(currentframe.shape[1] - currentframe.shape[1] / 25)
+        y = math.ceil(currentframe.shape[1] - currentframe.shape[1] / 4)
         # display progress bar across the width of the video
         x = 0
         w = currentframe.shape[0]

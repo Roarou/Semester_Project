@@ -3,7 +3,7 @@ import mediapipe as mp
 import cv2
 
 
-def classifier(mhl, mhd, ldm):
+def classifier(mhl, mhd, ldm, width=1920, height=1080):
 
     # Landmark initialization
     landmarks_x_R = []
@@ -15,12 +15,10 @@ def classifier(mhl, mhd, ldm):
     # First we check whether the first label is Right or Left, when it has been determined,
     # we check what if the latter has been detected twice,
     # if so we correct it , otherwise we check whether the second is left or right
-    # print(self.results.multi_handedness[0].classification[0].label,self.results.multi_handedness[0].classification[0].index)
-    # idx = self.results.multi_handedness[0].classification[0].index
-    # print(len(self.results.multi_hand_landmarks))
     output_R = np.zeros((3, len(ldm)))
     output_L = np.zeros((3, len(ldm)))
     # Right Hand
+    #print(mhd[0])
     if mhd[0].classification[0].label == 'Right':
         # Two indexes 1 or 0, we fill the matrix depending on the index
         idx = mhd[0].classification[0].index
@@ -41,8 +39,9 @@ def classifier(mhl, mhd, ldm):
                 landmarks_z_R.append(mhl[0].landmark[i].z)
                 break
 
-    elif len(mhd) > 1 and mhd[1].classification[0].label \
-            == 'Right':
+    if len(mhd) > 1 and mhd[1].classification[0].label \
+            == 'Right' and mhd[0].classification[0].label \
+                != mhd[1].classification[0].label:
         idx = mhd[1].classification[0].index
         for i in ldm:
             landmarks_x_R.append(mhl[idx].landmark[i].x)
@@ -66,8 +65,9 @@ def classifier(mhl, mhd, ldm):
                 landmarks_z_L.append(mhl[0].landmark[i].z)
                 break
 
-    elif len(mhd) > 1 and mhd[1].classification[0].label \
-            == 'Left':
+    if len(mhd) > 1 and mhd[1].classification[0].label \
+            == 'Left' and mhd[0].classification[0].label \
+                != mhd[1].classification[0].label:
         idx = mhd[1].classification[0].index
         for i in ldm:
             landmarks_x_L.append(mhl[idx].landmark[i].x)
@@ -76,6 +76,11 @@ def classifier(mhl, mhd, ldm):
 
     # Must create a matrix instead with y axis being 0...21
 
+    #Multiplying the lists by the width and height in order to get an image in the image frame
+    landmarks_x_L = [value * width for value in landmarks_x_L]
+    landmarks_y_L = [value * height for value in landmarks_y_L]
+    landmarks_x_R = [value * width for value in landmarks_x_R]
+    landmarks_y_R = [value * height for value in landmarks_y_R]
     if len(landmarks_z_R) != 0:
         output_R[0, :] = landmarks_x_R
         output_R[1, :] = landmarks_y_R
@@ -86,4 +91,4 @@ def classifier(mhl, mhd, ldm):
         output_L[1, :] = landmarks_y_L
         output_L[2, :] = landmarks_z_L
 
-    return output_R,output_L
+    return output_R, output_L
