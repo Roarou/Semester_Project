@@ -30,7 +30,7 @@ def main():
             width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
             height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
             #Generating path for the transformed videos
-            path_video_out = path + '/Tf_Videos/' + filenames_util[i].replace(('.mp4', ''))
+            path_video_out = path + '/Tf_Videos/' + filenames_util[i]
             #Write Transformed videos in the right folder
             writer = cv2.VideoWriter(path_video_out, cv2.VideoWriter_fourcc(*'DIVX'), 20, (width, height))
 
@@ -73,7 +73,7 @@ def main():
                     break
 
             # MODIFY OL OR OLR IF NEEDED HERE WHAT FILES YOU WANT TO USE
-            filename_toformat = '/OutputFileLR/' + filenames_util[i] + '_oLR.txt'
+            filename_toformat = '/OutputFileLR/' + filenames_util[i].replace('.mp4', '')  + '_oLR.txt'
             filename_actions = '/Data/' + filenames_util[i].replace('.mp4', '') + '_distance.txt'
             # Normalize the data
             data_formatting(filename_actions, filename_toformat)

@@ -26,9 +26,9 @@ def main(outR, outL, outrR, outlL, out_LR, filename, currenttime=0,nb_fingers=2)
 
     path = os.getcwd()
     #Generating paths
-    path_txt_out_L = path + '/OutputFileL/' + filename + '_oL.txt'
-    path_txt_out_R = path + '/OutputFileR/' + filename + '_oR.txt'
-    path_txt_out_LR = path + '/OutputFileLR/' + filename + '_oLR.txt'
+    path_txt_out_L = path + '/OutputFileL/' + filename.replace('.mp4', '') + '_oL.txt'
+    path_txt_out_R = path + '/OutputFileR/' + filename.replace('.mp4', '') + '_oR.txt'
+    path_txt_out_LR = path + '/OutputFileLR/' + filename.replace('.mp4', '') + '_oLR.txt'
     #Converting to csv file
     oL.to_csv(path_txt_out_L, index=False, sep='\t')
     oR.to_csv(path_txt_out_R, index=False, sep='\t')

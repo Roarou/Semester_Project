@@ -22,6 +22,7 @@ def classifier(mhl, mhd, ldm, width=1920, height=1080):
     if mhd[0].classification[0].label == 'Right':
         # Two indexes 1 or 0, we fill the matrix depending on the index
         idx = mhd[0].classification[0].index
+        #1 is right 0 is left
         # Checking the list's length
         if len(mhd) > 1 and mhd[0].classification[0].label \
                 == mhd[1].classification[0].label:
@@ -31,13 +32,13 @@ def classifier(mhl, mhd, ldm, width=1920, height=1080):
                 landmarks_x_R.append(mhl[idx].landmark[i].x)
                 landmarks_y_R.append(mhl[idx].landmark[i].y)
                 landmarks_z_R.append(mhl[idx].landmark[i].z)
-                break
+
         else:
             for i in ldm:
                 landmarks_x_R.append(mhl[0].landmark[i].x)
                 landmarks_y_R.append(mhl[0].landmark[i].y)
                 landmarks_z_R.append(mhl[0].landmark[i].z)
-                break
+
 
     if len(mhd) > 1 and mhd[1].classification[0].label \
             == 'Right' and mhd[0].classification[0].label \
@@ -57,17 +58,19 @@ def classifier(mhl, mhd, ldm, width=1920, height=1080):
                 landmarks_x_L.append(mhl[idx].landmark[i].x)
                 landmarks_y_L.append(mhl[idx].landmark[i].y)
                 landmarks_z_L.append(mhl[idx].landmark[i].z)
-                break
+
         else:
             for i in ldm:
                 landmarks_x_L.append(mhl[0].landmark[i].x)
                 landmarks_y_L.append(mhl[0].landmark[i].y)
                 landmarks_z_L.append(mhl[0].landmark[i].z)
-                break
+
 
     if len(mhd) > 1 and mhd[1].classification[0].label \
             == 'Left' and mhd[0].classification[0].label \
                 != mhd[1].classification[0].label:
+        mhd[0].classification[0].label
+        mhd[1].classification[0].label
         idx = mhd[1].classification[0].index
         for i in ldm:
             landmarks_x_L.append(mhl[idx].landmark[i].x)
@@ -91,4 +94,4 @@ def classifier(mhl, mhd, ldm, width=1920, height=1080):
         output_L[1, :] = landmarks_y_L
         output_L[2, :] = landmarks_z_L
 
-    return output_R, output_L
+    return output_L, output_R
