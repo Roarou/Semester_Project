@@ -30,7 +30,7 @@ def main():
             width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
             height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
             #Generating path for the transformed videos
-            path_video_out = path + '/Tf_Videos/' + filenames_util[i]
+            path_video_out = path + '/Tf_Videos/' + filenames_util[i].replace(('.mp4', ''))
             #Write Transformed videos in the right folder
             writer = cv2.VideoWriter(path_video_out, cv2.VideoWriter_fourcc(*'DIVX'), 20, (width, height))
 
@@ -43,8 +43,9 @@ def main():
             # count the number of frames
             # Get Video Features
             (fps, frame_count, durationSec) = uv.getStats()
-            print("Total time: {} sec FrameRate: {} FrameCount: {}".format(durationSec, fps, frame_count))
-            print("Video: {}".format(filenames_util[i]))
+            print("\n Total time: {} sec FrameRate: {} FrameCount: {}".format(durationSec, fps, frame_count))
+            print("Video: {}, {}/{}".format(filenames_util[i], i+1, len(filenames_util)))
+
             for j in tqdm(range(frame_count)):
                 #Get the current time
                 currentframe += 1
@@ -63,9 +64,9 @@ def main():
                     #Display progress bar
                     image = uv.displayProgressBar(image)
                     #Write a new video
-                    writer.write(image)
+                    #writer.write(image)
                     #Show the video
-                    cv2.imshow("frame", image)
+                    #cv2.imshow("frame", image)
                     if cv2.waitKey(30) & 0xFF == ord('q'):
                         break
                 else:

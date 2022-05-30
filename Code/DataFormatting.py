@@ -39,12 +39,20 @@ def data_formatting(filename_actions, filename_toformat):
         #print(len(finger_storage[i]))
         df2[finger] = finger_storage[i]
         #Replacing Outliers with Median Values AKA 0 values due to lack of detection
+        q1 = np.percentile(df2[finger], 25)
+        q3 = np.percentile(df2[finger], 75)
+        # print(q1, q3)
+        IQR = q3 - q1
+        lwr_bound = q1 - (1.5 * IQR)
+        #upr_bound = q3 + (1.5 * IQR)
+        #First approach
         q_5 = df2[finger].quantile(0.50)
-        q_10 = df2[finger].quantile(0.10)
-        df2[finger] = np.where(df2[finger] < q_10, q_5, df2[finger])
+        #q_10 = df2[finger].quantile(0.10)
+        df2[finger] = np.where(df2[finger] < lwr_bound, q_5, df2[finger])
 
     df2['Action'] = df['Action']
-
+    df2['start_time'] = df['start_time']
+    df2['end_time'] = df['end_time']
     df2.to_csv(path2, index=False, sep='\t')
 
 
