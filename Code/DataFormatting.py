@@ -6,7 +6,7 @@ import numpy as np
 # labeled data size x by finding a mean value
 
 
-def data_formatting(filename_actions, filename_toformat, filename_combine, choice = 'All'):
+def data_formatting(filename_actions, filename_toformat, filename_combine, choice='All'):
     path = os.getcwd() + filename_actions
     df = pd.read_csv(path, sep='\t')
     path2 = os.getcwd() + filename_toformat
@@ -75,6 +75,22 @@ def data_formatting(filename_actions, filename_toformat, filename_combine, choic
         df2['Index_R'] = (df2['Index_RX'] ** 2 + df2['Index_RY'] ** 2) ** (1 / 2)
         df2['Index_L'] = (df2['Index_LX'] ** 2 + df2['Index_LY'] ** 2) ** (1 / 2)
         df2 = df2.drop(['Thumb_RX', 'Index_RX', 'Thumb_RY', 'Index_RY', 'Thumb_LX', 'Index_LX', 'Thumb_LY', 'Index_LY'], axis=1)
+    if choice == 'Right':
+        df2['Thumb_RX'] = df2['Thumb_RX'] - dfcomb['Visual Intake Position X [px]']
+        df2['Index_RX'] = df2['Index_RX'] - dfcomb['Visual Intake Position X [px]']
+        df2['Thumb_RY'] = df2['Thumb_RY'] - dfcomb['Visual Intake Position X [px]']
+        df2['Index_RY'] = df2['Index_RY'] - dfcomb['Visual Intake Position X [px]']
+        df2['Thumb_R'] = (df2['Thumb_RX'] ** 2 + df2['Thumb_RY'] ** 2) ** (1 / 2)
+        df2['Index_R'] = (df2['Index_RX'] ** 2 + df2['Index_RY'] ** 2) ** (1 / 2)
+        df2 = df2.drop(['Thumb_RX', 'Index_RX', 'Thumb_RY', 'Index_RY'], axis=1)
+    if choice == 'Left':
+        df2['Thumb_LX'] = df2['Thumb_LX'] - dfcomb['Visual Intake Position X [px]']
+        df2['Index_LX'] = df2['Index_LX'] - dfcomb['Visual Intake Position X [px]']
+        df2['Thumb_LY'] = df2['Thumb_LY'] - dfcomb['Visual Intake Position X [px]']
+        df2['Index_LY'] = df2['Index_LY'] - dfcomb['Visual Intake Position X [px]']
+        df2['Thumb_L'] = (df2['Thumb_LX'] ** 2 + df2['Thumb_LY'] ** 2) ** (1 / 2)
+        df2['Index_L'] = (df2['Index_LX'] ** 2 + df2['Index_LY'] ** 2) ** (1 / 2)
+        df2 = df2.drop(['Thumb_LX', 'Index_LX', 'Thumb_LY', 'Index_LY'], axis=1)
 
     df2.to_csv(path2, index=False, sep='\t')
 if __name__ == "__main__":
