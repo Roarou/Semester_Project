@@ -1,0 +1,1 @@
+Thumb_RX	Index_RX	Thumb_RY	Index_RY	Thumb_LX	Index_LX	Thumb_LY	Index_LY	Time

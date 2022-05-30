@@ -80,8 +80,9 @@ def main():
             # MODIFY OL OR OLR IF NEEDED HERE WHAT FILES YOU WANT TO USE
             filename_toformat = '/OutputFileLRXY/' + filenames_util[i].replace('.mp4', '')  + '_oLRXY.txt'
             filename_actions = '/Data/' + filenames_util[i].replace('.mp4', '') + '_distance.txt'
+            filename_combine = '/Fixations/' + filenames_util[i].replace('.mp4', '.txt')
             # Normalize the data
-            data_formatting(filename_actions, filename_toformat)
+            data_formatting(filename_actions, filename_toformat, filename_combine)
             cap.release()
             writer.release()
             cv2.destroyAllWindows()
