@@ -37,6 +37,7 @@ def main():
             outrR = []
             outlL = []
             out_LR = []
+            out_LRXY = []
             currenttime = []
             currentframe = 0
             uv = utilsVideo(cap)
@@ -54,13 +55,17 @@ def main():
                 success, image = cap.read()
                 if success:
                     #Getting the current frame and the hands' data
-                    image,  outR, outL = tracker.handsFinder(image)
+                    image,  outL, outR = tracker.handsFinder(image)
                     #Drawing landmarks on image
                     #out[x or y] [No finger]
                     image = cv2.circle(image, (int(outL[0][0]), int(outL[1][0])), radius=15, color=(0, 0, 255), thickness=-1)
                     image = cv2.circle(image, (int(outL[0][1]), int(outL[1][1])), radius=12, color=(0, 255, 255), thickness=-1)
+                    image = cv2.circle(image, (int(outR[0][0]), int(outR[1][0])), radius=15, color=(255, 0, 0),
+                                       thickness=-1)
+                    image = cv2.circle(image, (int(outR[0][1]), int(outR[1][1])), radius=12, color=(255, 255, 0),
+                                       thickness=-1)
                     #Saving everything into a csv file
-                    DATA.main(outR, outL, outrR, outlL, out_LR, filenames_util[i], currenttime)
+                    DATA.main(outR, outL, outrR, outlL, out_LR, out_LRXY, filenames_util[i], currenttime)
                     #Display progress bar
                     image = uv.displayProgressBar(image)
                     #Write a new video
@@ -73,7 +78,7 @@ def main():
                     break
 
             # MODIFY OL OR OLR IF NEEDED HERE WHAT FILES YOU WANT TO USE
-            filename_toformat = '/OutputFileLR/' + filenames_util[i].replace('.mp4', '')  + '_oLR.txt'
+            filename_toformat = '/OutputFileLRXY/' + filenames_util[i].replace('.mp4', '')  + '_oLRXY.txt'
             filename_actions = '/Data/' + filenames_util[i].replace('.mp4', '') + '_distance.txt'
             # Normalize the data
             data_formatting(filename_actions, filename_toformat)

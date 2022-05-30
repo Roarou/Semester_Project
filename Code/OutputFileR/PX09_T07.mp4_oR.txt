@@ -1,2 +1,0 @@
-Thumb_R	Index_R	Time
-0.0	0.0	0.04

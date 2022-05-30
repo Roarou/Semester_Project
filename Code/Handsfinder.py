@@ -24,8 +24,10 @@ def classifier(mhl, mhd, ldm, width=1920, height=1080):
         idx = mhd[0].classification[0].index
         #1 is right 0 is left
         # Checking the list's length
-        if len(mhd) > 1 and mhd[0].classification[0].label \
-                == mhd[1].classification[0].label:
+        if (len(mhd) > 1 and mhd[0].classification[0].label
+                == mhd[1].classification[0].label) or \
+                (len(mhd) > 1 and mhd[0].classification[0].label
+                    != mhd[1].classification[0].label):
             # If both hands are detected to be the same ,
             # Then take the first hand and fill the matrix with informations
             for i in ldm:
@@ -39,7 +41,6 @@ def classifier(mhl, mhd, ldm, width=1920, height=1080):
                 landmarks_y_R.append(mhl[0].landmark[i].y)
                 landmarks_z_R.append(mhl[0].landmark[i].z)
 
-
     if len(mhd) > 1 and mhd[1].classification[0].label \
             == 'Right' and mhd[0].classification[0].label \
                 != mhd[1].classification[0].label:
@@ -52,8 +53,10 @@ def classifier(mhl, mhd, ldm, width=1920, height=1080):
     # Left hand
     if mhd[0].classification[0].label == 'Left':
         idx = mhd[0].classification[0].index
-        if len(mhd) > 1 and mhd[0].classification[0].label \
-                == mhd[1].classification[0].label:
+        if (len(mhd) > 1 and mhd[0].classification[0].label
+                == mhd[1].classification[0].label) or \
+                (len(mhd) > 1 and mhd[0].classification[0].label
+                    != mhd[1].classification[0].label):
             for i in ldm:
                 landmarks_x_L.append(mhl[idx].landmark[i].x)
                 landmarks_y_L.append(mhl[idx].landmark[i].y)
@@ -69,8 +72,7 @@ def classifier(mhl, mhd, ldm, width=1920, height=1080):
     if len(mhd) > 1 and mhd[1].classification[0].label \
             == 'Left' and mhd[0].classification[0].label \
                 != mhd[1].classification[0].label:
-        mhd[0].classification[0].label
-        mhd[1].classification[0].label
+
         idx = mhd[1].classification[0].index
         for i in ldm:
             landmarks_x_L.append(mhl[idx].landmark[i].x)

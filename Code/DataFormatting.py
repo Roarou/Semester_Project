@@ -15,7 +15,7 @@ def data_formatting(filename_actions, filename_toformat):
     #Removing Time from Fingers list
     Fingers.pop(-1)
     df['Action'] = df['Action'].astype('str')
-
+    #print(df)
     finger_storage = []
     for i, finger in enumerate(Fingers):
         finger_n = []
@@ -57,5 +57,5 @@ def data_formatting(filename_actions, filename_toformat):
 
 
 if __name__ == "__main__":
-    Fingers = ['Thumb_L',	'Index_L']
-    data_formatting(Fingers, '/Exp1Normal01_distance.txt', '/Exp1Normal01.mp4_oL.txt')
+    Fingers = ['Thumb_L',	'Index_L', 'Thumb_R',	'Index_R']
+    data_formatting('/Data/Exp1Normal02_distance.txt', '/OutputFileLR/Exp1Normal02_oLR.txt')
